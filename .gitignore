@@ -1,0 +1,5 @@
+node_modules/
+tictoc.db
+*.db-shm
+*.db-wal
+.env
