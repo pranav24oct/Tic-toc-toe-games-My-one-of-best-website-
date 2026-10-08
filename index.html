@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        TicToc Toy Games | Play Beyond Ordinary
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a
+        href="/"
+        class="logo"
+    >
+
+        <span class="logo-icon">
+            ◆
+        </span>
+
+        TicToc
+
+        <b>Toy</b>
+
+    </a>
+
+
+    <nav>
+
+        <a href="#home">
+            Home
+        </a>
+
+        <a href="#games">
+            Games
+        </a>
+
+        <a href="#challenge">
+            Challenge
+        </a>
+
+        <a href="#leaderboard">
+            Leaderboard
+        </a>
+
+        <a href="#about">
+            About
+        </a>
+
+    </nav>
+
+
+    <div class="nav-actions">
+
+        <button
+            class="icon-button"
+            onclick="toggleTheme()"
+        >
+            ◐
+        </button>
+
+        <button
+            id="profileButton"
+            class="profile-button"
+            onclick="openAuth()"
+        >
+            Login
+        </button>
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+<section
+    id="home"
+    class="hero"
+>
+
+    <div>
+
+        <div class="hero-tag">
+            ✦ THE NEW TOY-GAME UNIVERSE
+        </div>
+
+        <h1>
+
+            Play.
+
+            <span class="gradient-text">
+                Explore.
+            </span>
+
+            Repeat.
+
+        </h1>
+
+        <p>
+            Welcome to TicToc Toy Games —
+            a colorful digital playground where
+            classic mini games meet futuristic
+            design, player rewards and challenges.
+        </p>
+
+
+        <div class="hero-actions">
+
+            <a
+                href="#games"
+                class="primary-button"
+            >
+                🎮 Start Playing
+            </a>
+
+            <a
+                href="#about"
+                class="secondary-button"
+            >
+                Discover TicToc
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-visual">
+
+        <div class="float-item float-one">
+            🐍
+        </div>
+
+        <div class="float-item float-two">
+            🎮
+        </div>
+
+        <div class="float-item float-three">
+            ⭐
+        </div>
+
+        <div class="hero-cube">
+            🎮
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="stats-strip">
+
+    <div class="stat-box">
+
+        <span class="stat-number">
+            06
+        </span>
+
+        <span class="stat-label">
+            Games
+        </span>
+
+    </div>
+
+
+    <div class="stat-box">
+
+        <span class="stat-number">
+            ∞
+        </span>
+
+        <span class="stat-label">
+            Challenges
+        </span>
+
+    </div>
+
+
+    <div class="stat-box">
+
+        <span class="stat-number">
+            3D
+        </span>
+
+        <span class="stat-label">
+            Visual Style
+        </span>
+
+    </div>
+
+
+    <div class="stat-box">
+
+        <span class="stat-number">
+            XP
+        </span>
+
+        <span class="stat-label">
+            Player Progress
+        </span>
+
+    </div>
+
+</section>
+
+
+<section
+    id="games"
+    class="section"
+>
+
+    <div class="section-header">
+
+        <div>
+
+            <span class="section-label">
+                GAME UNIVERSE
+            </span>
+
+            <h2 class="section-title">
+                Choose your
+                <span class="gradient-text">
+                    challenge.
+                </span>
+            </h2>
+
+        </div>
+
+
+        <div class="search-box">
+
+            <span>
+                ⌕
+            </span>
+
+            <input
+                id="gameSearch"
+                type="text"
+                placeholder="Search games..."
+                oninput="searchGames()"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div class="category-bar">
+
+        <button
+            class="category active"
+            onclick="
+                filterGames(
+                    'all',
+                    this
+                )
+            "
+        >
+            All
+        </button>
+
+        <button
+            class="category"
+            onclick="
+                filterGames(
+                    'arcade',
+                    this
+                )
+            "
+        >
+            Arcade
+        </button>
+
+        <button
+            class="category"
+            onclick="
+                filterGames(
+                    'classic',
+                    this
+                )
+            "
+        >
+            Classic
+        </button>
+
+        <button
+            class="category"
+            onclick="
+                filterGames(
+                    'brain',
+                    this
+                )
+            "
+        >
+            Brain
+        </button>
+
+        <button
+            class="category"
+            onclick="
+                filterGames(
+                    'action',
+                    this
+                )
+            "
+        >
+            Action
+        </button>
+
+    </div>
+
+
+    <div class="games-grid">
+
+
+        <!-- SNAKE -->
+
+        <article
+            class="game-card"
+            data-category="arcade"
+            data-name="snake neon snake"
+        >
+
+            <div class="game-card-art">
+
+                <span class="game-emoji">
+                    🐍
+                </span>
+
+            </div>
+
+
+            <div class="game-card-content">
+
+                <span class="game-type">
+                    ARCADE
+                </span>
+
+                <h3>
+                    Neon Snake
+                </h3>
+
+                <p>
+                    Grow your snake,
+                    collect energy and survive
+                    the neon arena.
+                </p>
+
+
+                <div class="game-actions">
+
+                    <button
+                        class="favorite-button"
+                        data-game="Snake"
+                        onclick="
+                            toggleFavorite(
+                                'Snake'
+                            )
+                        "
+                    >
+                        ♡
+                    </button>
+
+                    <a
+                        href="games/snake.html"
+                        class="play-button"
+                        onclick="
+                            recordGame(
+                                'Snake'
+                            )
+                        "
+                    >
+                        Play →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- TIC TAC TOE -->
+
+        <article
+            class="game-card"
+            data-category="classic"
+            data-name="tic tac toe"
+        >
+
+            <div class="game-card-art">
+
+                <span class="game-emoji">
+                    ❌⭕
+                </span>
+
+            </div>
+
+
+            <div class="game-card-content">
+
+                <span class="game-type">
+                    CLASSIC
+                </span>
+
+                <h3>
+                    Tic-Tac-Toe
+                </h3>
+
+                <p>
+                    Challenge the smart AI
+                    or play against another
+                    player.
+                </p>
+
+
+                <div class="game-actions">
+
+                    <button
+                        class="favorite-button"
+                        data-game="Tic-Tac-Toe"
+                        onclick="
+                            toggleFavorite(
+                                'Tic-Tac-Toe'
+                            )
+                        "
+                    >
+                        ♡
+                    </button>
+
+                    <a
+                        href="games/tic-tac-toe.html"
+                        class="play-button"
+                    >
+                        Play →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- BRICK BREAKER -->
+
+        <article
+            class="game-card"
+            data-category="arcade"
+            data-name="brick breaker"
+        >
+
+            <div class="game-card-art">
+
+                <span class="game-emoji">
+                    🧱
+                </span>
+
+            </div>
+
+
+            <div class="game-card-content">
+
+                <span class="game-type">
+                    ARCADE
+                </span>
+
+                <h3>
+                    Brick Breaker
+                </h3>
+
+                <p>
+                    Smash the blocks,
+                    increase your score and
+                    survive every level.
+                </p>
+
+
+                <div class="game-actions">
+
+                    <button
+                        class="favorite-button"
+                        data-game="Brick Breaker"
+                        onclick="
+                            toggleFavorite(
+                                'Brick Breaker'
+                            )
+                        "
+                    >
+                        ♡
+                    </button>
+
+                    <a
+                        href="games/brick-breaker.html"
+                        class="play-button"
+                    >
+                        Play →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- PONG -->
+
+        <article
+            class="game-card"
+            data-category="classic"
+            data-name="pong cyber pong"
+        >
+
+            <div class="game-card-art">
+
+                <span class="game-emoji">
+                    🏓
+                </span>
+
+            </div>
+
+
+            <div class="game-card-content">
+
+                <span class="game-type">
+                    CLASSIC
+                </span>
+
+                <h3>
+                    Cyber Pong
+                </h3>
+
+                <p>
+                    A futuristic paddle battle
+                    against the adaptive AI.
+                </p>
+
+
+                <div class="game-actions">
+
+                    <button
+                        class="favorite-button"
+                        data-game="Pong"
+                        onclick="
+                            toggleFavorite(
+                                'Pong'
+                            )
+                        "
+                    >
+                        ♡
+                    </button>
+
+                    <a
+                        href="games/pong.html"
+                        class="play-button"
+                    >
+                        Play →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- MEMORY -->
+
+        <article
+            class="game-card"
+            data-category="brain"
+            data-name="memory match"
+        >
+
+            <div class="game-card-art">
+
+                <span class="game-emoji">
+                    🧠
+                </span>
+
+            </div>
+
+
+            <div class="game-card-content">
+
+                <span class="game-type">
+                    BRAIN
+                </span>
+
+                <h3>
+                    Memory Match
+                </h3>
+
+                <p>
+                    Match every pair before
+                    your moves disappear.
+                </p>
+
+
+                <div class="game-actions">
+
+                    <button
+                        class="favorite-button"
+                        data-game="Memory Match"
+                        onclick="
+                            toggleFavorite(
+                                'Memory Match'
+                            )
+                        "
+                    >
+                        ♡
+                    </button>
+
+                    <a
+                        href="games/memory-match.html"
+                        class="play-button"
+                    >
+                        Play →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- 2048 -->
+
+        <article
+            class="game-card"
+            data-category="brain"
+            data-name="2048 2048 hyper"
+        >
+
+            <div class="game-card-art">
+
+                <span
+                    class="game-emoji"
+                    style="
+                    font-size:48px;
+                    "
+                >
+                    2048
+                </span>
+
+            </div>
+
+
+            <div class="game-card-content">
+
+                <span class="game-type">
+                    BRAIN
+                </span>
+
+                <h3>
+                    2048 Hyper
+                </h3>
+
+                <p>
+                    Merge numbers,
+                    build powerful tiles
+                    and reach 2048.
+                </p>
+
+
+                <div class="game-actions">
+
+                    <button
+                        class="favorite-button"
+                        data-game="2048"
+                        onclick="
+                            toggleFavorite(
+                                '2048'
+                            )
+                        "
+                    >
+                        ♡
+                    </button>
+
+                    <a
+                        href="games/2048.html"
+                        class="play-button"
+                    >
+                        Play →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<section
+    id="challenge"
+    class="section"
+>
+
+    <span class="section-label">
+        DAILY MISSION
+    </span>
+
+    <div class="challenge">
+
+        <div>
+
+            <h3 id="challengeTitle">
+                Daily Challenge
+            </h3>
+
+            <p id="challengeDescription">
+                Loading today's challenge...
+            </p>
+
+            <div
+                id="challengeReward"
+                class="challenge-reward"
+            >
+                🎁 Loading reward...
+            </div>
+
+        </div>
+
+
+        <a
+            href="#games"
+            class="primary-button"
+        >
+            Accept →
+        </a>
+
+    </div>
+
+</section>
+
+
+<section
+    id="leaderboard"
+    class="section"
+>
+
+    <div class="section-header">
+
+        <div>
+
+            <span class="section-label">
+                COMPETE
+            </span>
+
+            <h2 class="section-title">
+                Global
+                <span class="gradient-text">
+                    Leaderboard
+                </span>
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="leaderboard"
+        class="leaderboard"
+    >
+
+        Loading leaderboard...
+
+    </div>
+
+</section>
+
+
+<section
+    id="about"
+    class="section"
+>
+
+    <div class="about-layout">
+
+
+        <div>
+
+            <div class="about-cube">
+                🎮
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <span class="section-label">
+                ABOUT TICTOC
+            </span>
+
+            <h2 class="section-title">
+                Small games.
+                <br>
+
+                <span class="gradient-text">
+                    Big personality.
+                </span>
+            </h2>
+
+
+            <p>
+                TicToc Toy Games is a creative
+                browser gaming platform designed
+                to make familiar games feel
+                different.
+            </p>
+
+            <p>
+                The platform combines mini games
+                with profiles, XP, coins,
+                achievements, daily challenges
+                and leaderboards.
+            </p>
+
+
+            <div class="feature-list">
+
+                <div class="feature">
+                    <b>01</b>
+                    Creative Design
+                </div>
+
+                <div class="feature">
+                    <b>02</b>
+                    Player Progress
+                </div>
+
+                <div class="feature">
+                    <b>03</b>
+                    Daily Challenges
+                </div>
+
+                <div class="feature">
+                    <b>04</b>
+                    Global Scores
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-title">
+        ◆ TicToc Toy Games
+    </div>
+
+    <div class="footer-copy">
+        Play beyond ordinary.
+    </div>
+
+    <div
+        class="footer-copy"
+        style="margin-top:20px;"
+    >
+        © 2026 TicToc Toy Games
+    </div>
+
+</footer>
+
+
+<!-- AUTH MODAL -->
+
+<div
+    id="authModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <button
+            class="close-modal"
+            onclick="closeAuth()"
+        >
+            ×
+        </button>
+
+
+        <div class="auth-logo">
+            ◆
+        </div>
+
+
+        <h2 id="authTitle">
+            Welcome Back
+        </h2>
+
+        <p id="authSubtitle">
+            Login to continue playing.
+        </p>
+
+
+        <form
+            id="authForm"
+            onsubmit="
+                handleAuth(event)
+            "
+        >
+
+            <div
+                id="nameField"
+                class="input-group hidden"
+            >
+
+                <label>
+                    Player Name
+                </label>
+
+                <input
+                    id="authName"
+                    type="text"
+                    placeholder="Your name"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    id="authEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Password
+                </label>
+
+                <input
+                    id="authPassword"
+                    type="password"
+                    placeholder="Minimum 6 characters"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                class="primary-button full"
+                type="submit"
+            >
+
+                <span id="authSubmitText">
+                    Login
+                </span>
+
+            </button>
+
+        </form>
+
+
+        <button
+            id="authSwitch"
+            class="switch-auth"
+            onclick="
+                toggleAuthMode()
+            "
+        >
+            New here?
+            Create an account
+        </button>
+
+    </div>
+
+</div>
+
+
+<div
+    id="toast"
+    class="toast"
+>
+</div>
+
+
+<script src="js/app.js"></script>
+
+</body>
+
+</html>

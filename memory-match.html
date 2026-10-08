@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<title>
+Memory Match | TicToc
+</title>
+
+<link
+rel="stylesheet"
+href="../css/games.css"
+>
+
+<style>
+
+body {
+    margin:0;
+    color:white;
+    font-family:Arial,sans-serif;
+
+    background:
+        radial-gradient(
+            circle,
+            #422006,
+            #020617 70%
+        );
+}
+
+.memory-board {
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,80px);
+
+    gap:10px;
+
+    justify-content:center;
+
+    margin:25px auto;
+}
+
+.memory-card {
+    width:80px;
+    height:80px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#172033;
+
+    color:white;
+
+    font-size:35px;
+
+    cursor:pointer;
+
+    transition:
+        transform .2s,
+        background .2s;
+}
+
+.memory-card:hover {
+    transform:translateY(-4px);
+}
+
+.memory-card.flipped,
+.memory-card.matched {
+    background:#f59e0b;
+}
+
+@media(max-width:500px) {
+
+    .memory-board {
+        grid-template-columns:
+            repeat(4,65px);
+    }
+
+    .memory-card {
+        width:65px;
+        height:65px;
+        font-size:28px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game-page">
+
+<div class="game-wrapper">
+
+<a
+href="/"
+class="game-back"
+>
+← Back to TicToc
+</a>
+
+
+<h1 class="game-title">
+🧠 Memory Match
+</h1>
+
+<p class="game-subtitle">
+Train your memory and beat your best moves.
+</p>
+
+
+<div class="game-panel">
+
+<div class="game-stats">
+
+<div class="game-stat">
+Moves:
+<span id="moves">
+0
+</span>
+</div>
+
+<div class="game-stat">
+Pairs:
+<span id="pairs">
+0
+</span>
+</div>
+
+</div>
+
+
+<div
+id="board"
+class="memory-board"
+></div>
+
+
+<button
+class="game-button"
+onclick="newGame()"
+>
+New Game
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="../js/game-common.js"></script>
+
+
+<script>
+
+const symbols = [
+
+    "🍕","🍕",
+    "🚀","🚀",
+    "🎮","🎮",
+    "🐱","🐱",
+    "⚡","⚡",
+    "👑","👑",
+    "🍩","🍩",
+    "🛸","🛸"
+
+];
+
+
+let cards = [];
+
+let first = null;
+let second = null;
+
+let locked = false;
+
+let moves = 0;
+let matched = 0;
+
+
+function shuffle(array) {
+
+    return array.sort(
+        () =>
+            Math.random() - .5
+    );
+
+}
+
+
+function newGame() {
+
+    cards =
+        shuffle(
+            [...symbols]
+        );
+
+    first = null;
+
+    second = null;
+
+    locked = false;
+
+    moves = 0;
+
+    matched = 0;
+
+
+    document
+        .getElementById(
+            "moves"
+        )
+        .textContent =
+        0;
+
+
+    document
+        .getElementById(
+            "pairs"
+        )
+        .textContent =
+        0;
+
+
+    render();
+
+}
+
+
+function render() {
+
+    const board =
+        document.getElementById(
+            "board"
+        );
+
+    board.innerHTML = "";
+
+
+    cards.forEach(
+        (symbol,index) => {
+
+            const card =
+                document.createElement(
+                    "button"
+                );
+
+            card.className =
+                "memory-card";
+
+            card.textContent =
+                "?";
+
+
+            card.onclick =
+                () =>
+                    flip(
+                        card,
+                        index
+                    );
+
+
+            board.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+function flip(card,index) {
+
+    if (
+
+        locked ||
+
+        card.classList.contains(
+            "flipped"
+        ) ||
+
+        card.classList.contains(
+            "matched"
+        )
+
+    ) {
+
+        return;
+
+    }
+
+
+    card.classList.add(
+        "flipped"
+    );
+
+    card.textContent =
+        cards[index];
+
+
+    if (!first) {
+
+        first = {
+            card,
+            index
+        };
+
+        return;
+
+    }
+
+
+    second = {
+        card,
+        index
+    };
+
+
+    moves++;
+
+
+    document
+        .getElementById(
+            "moves"
+        )
+        .textContent =
+        moves;
+
+
+    if (
+        cards[first.index] ===
+        cards[second.index]
+    ) {
+
+        first.card.classList.add(
+            "matched"
+        );
+
+        second.card.classList.add(
+            "matched"
+        );
+
+
+        matched++;
+
+
+        document
+            .getElementById(
+                "pairs"
+            )
+            .textContent =
+            matched;
+
+
+        first = null;
+
+        second = null;
+
+
+        if (
+            matched === 8
+        ) {
+
+            const score =
+                Math.max(
+                    100,
+                    1000 -
+                    moves * 20
+                );
+
+
+            finishGame(
+                "Memory Match",
+                score,
+                true
+            );
+
+
+            setTimeout(
+                () => {
+
+                    alert(
+                        "Perfect Memory! 🎉"
+                    );
+
+                },
+                300
+            );
+
+        }
+
+
+    } else {
+
+        locked = true;
+
+
+        setTimeout(
+            () => {
+
+                first.card.classList
+                    .remove(
+                        "flipped"
+                    );
+
+                second.card.classList
+                    .remove(
+                        "flipped"
+                    );
+
+
+                first.card.textContent =
+                    "?";
+
+                second.card.textContent =
+                    "?";
+
+
+                first = null;
+
+                second = null;
+
+                locked = false;
+
+            },
+            700
+        );
+
+    }
+
+}
+
+
+newGame();
+
+</script>
+
+</body>
+
+</html>

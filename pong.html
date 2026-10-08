@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<title>
+Cyber Pong | TicToc
+</title>
+
+<link
+rel="stylesheet"
+href="../css/games.css"
+>
+
+<style>
+
+body {
+    margin:0;
+    color:white;
+    font-family:Arial,sans-serif;
+
+    background:
+        radial-gradient(
+            circle,
+            #172554,
+            #020617 70%
+        );
+}
+
+canvas {
+    max-width:95vw;
+
+    background:#020617;
+
+    border:
+        2px solid #22d3ee;
+
+    border-radius:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game-page">
+
+<div class="game-wrapper">
+
+<a
+href="/"
+class="game-back"
+>
+← Back to TicToc
+</a>
+
+<h1 class="game-title">
+🏓 Cyber Pong
+</h1>
+
+<p class="game-subtitle">
+First player to reach five wins.
+</p>
+
+
+<div class="game-panel">
+
+<div class="game-stats">
+
+<div class="game-stat">
+You:
+<span id="playerScore">
+0
+</span>
+</div>
+
+<div class="game-stat">
+AI:
+<span id="aiScore">
+0
+</span>
+</div>
+
+</div>
+
+
+<canvas
+id="canvas"
+width="700"
+height="420"
+></canvas>
+
+
+<br>
+
+
+<button
+class="game-button"
+onclick="startGame()"
+>
+Start / Restart
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="../js/game-common.js"></script>
+
+
+<script>
+
+const canvas =
+document.getElementById(
+    "canvas"
+);
+
+const ctx =
+canvas.getContext(
+    "2d"
+);
+
+let player;
+let ai;
+let ball;
+
+let playerScore = 0;
+let aiScore = 0;
+
+let running = false;
+
+
+function startGame() {
+
+    playerScore = 0;
+
+    aiScore = 0;
+
+
+    player = {
+
+        x: 20,
+
+        y: 170,
+
+        width: 14,
+
+        height: 80
+
+    };
+
+
+    ai = {
+
+        x: 666,
+
+        y: 170,
+
+        width: 14,
+
+        height: 80
+
+    };
+
+
+    resetBall();
+
+
+    running = true;
+
+    requestAnimationFrame(
+        loop
+    );
+
+}
+
+
+function resetBall() {
+
+    ball = {
+
+        x: 350,
+
+        y: 210,
+
+        dx:
+            Math.random() > .5
+                ? 5
+                : -5,
+
+        dy:
+            Math.random() * 5 -
+            2.5,
+
+        size: 10
+
+    };
+
+}
+
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    for (
+        let y = 0;
+        y < canvas.height;
+        y += 25
+    ) {
+
+        ctx.fillStyle =
+            "rgba(34,211,238,.15)";
+
+        ctx.fillRect(
+            347,
+            y,
+            6,
+            12
+        );
+
+    }
+
+
+    ctx.fillStyle =
+        "#22d3ee";
+
+    ctx.fillRect(
+        player.x,
+        player.y,
+        player.width,
+        player.height
+    );
+
+
+    ctx.fillStyle =
+        "#ec4899";
+
+    ctx.fillRect(
+        ai.x,
+        ai.y,
+        ai.width,
+        ai.height
+    );
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.shadowBlur = 20;
+
+    ctx.shadowColor =
+        "#ffffff";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        ball.x,
+        ball.y,
+        ball.size,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.shadowBlur = 0;
+
+}
+
+
+function update() {
+
+    ball.x += ball.dx;
+
+    ball.y += ball.dy;
+
+
+    if (
+        ball.y < 10 ||
+        ball.y >
+            canvas.height - 10
+    ) {
+
+        ball.dy *= -1;
+
+    }
+
+
+    if (
+
+        ball.x <
+            player.x + 20 &&
+
+        ball.y >
+            player.y &&
+
+        ball.y <
+            player.y +
+            player.height
+
+    ) {
+
+        ball.dx =
+            Math.abs(
+                ball.dx
+            );
+
+    }
+
+
+    if (
+
+        ball.x >
+            ai.x - 10 &&
+
+        ball.y >
+            ai.y &&
+
+        ball.y <
+            ai.y +
+            ai.height
+
+    ) {
+
+        ball.dx =
+            -Math.abs(
+                ball.dx
+            );
+
+    }
+
+
+    ai.y +=
+        (
+            ball.y -
+            (
+                ai.y +
+                ai.height / 2
+            )
+        ) * .07;
+
+
+    if (
+        ball.x < 0
+    ) {
+
+        aiScore++;
+
+        resetBall();
+
+    }
+
+
+    if (
+        ball.x >
+        canvas.width
+    ) {
+
+        playerScore++;
+
+        resetBall();
+
+    }
+
+
+    document
+        .getElementById(
+            "playerScore"
+        )
+        .textContent =
+        playerScore;
+
+
+    document
+        .getElementById(
+            "aiScore"
+        )
+        .textContent =
+        aiScore;
+
+
+    if (
+        playerScore >= 5 ||
+        aiScore >= 5
+    ) {
+
+        running = false;
+
+        finishGame(
+            "Pong",
+            playerScore,
+            playerScore >= 5
+        );
+
+
+        setTimeout(
+            () => {
+
+                alert(
+                    playerScore >= 5
+                        ? "You Win! 🎉"
+                        : "AI Wins!"
+                );
+
+            },
+            100
+        );
+
+    }
+
+}
+
+
+function loop() {
+
+    if (!running) {
+        return;
+    }
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(
+        loop
+    );
+
+}
+
+
+document.addEventListener(
+    "mousemove",
+    event => {
+
+        if (!player) {
+            return;
+        }
+
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+
+        player.y =
+            event.clientY -
+            rect.top -
+            player.height / 2;
+
+
+        player.y =
+            Math.max(
+                0,
+                Math.min(
+                    canvas.height -
+                        player.height,
+                    player.y
+                )
+            );
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (!player) {
+            return;
+        }
+
+
+        if (
+            event.key ===
+            "ArrowUp"
+        ) {
+
+            player.y -= 25;
+
+        }
+
+
+        if (
+            event.key ===
+            "ArrowDown"
+        ) {
+
+            player.y += 25;
+
+        }
+
+    }
+);
+
+
+startGame();
+
+</script>
+
+</body>
+
+</html>

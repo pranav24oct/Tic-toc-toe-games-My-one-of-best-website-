@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<title>
+Tic-Tac-Toe | TicToc
+</title>
+
+<link
+rel="stylesheet"
+href="../css/games.css"
+>
+
+<style>
+
+body {
+    margin: 0;
+    color: white;
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(
+            circle,
+            #312e81,
+            #020617 70%
+        );
+}
+
+.board {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,100px);
+
+    gap: 10px;
+
+    justify-content: center;
+
+    margin: 25px auto;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+
+    border-radius: 18px;
+
+    border: 1px solid #475569;
+
+    background: #111827;
+
+    color: white;
+
+    font-size: 48px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.cell:hover {
+    transform: scale(1.05);
+    border-color: #22d3ee;
+}
+
+.mode {
+    margin: 10px;
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background: #111827;
+
+    color: white;
+
+    border: 1px solid #334155;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game-page">
+
+<div class="game-wrapper">
+
+<a
+href="/"
+class="game-back"
+>
+← Back to TicToc
+</a>
+
+<h1 class="game-title">
+❌ Tic-Tac-Toe ⭕
+</h1>
+
+<p class="game-subtitle">
+Classic battle with a smarter twist.
+</p>
+
+
+<div class="game-panel">
+
+<select
+id="mode"
+class="mode"
+onchange="restart()"
+>
+
+<option value="computer">
+Player vs Computer
+</option>
+
+<option value="player">
+Player vs Player
+</option>
+
+</select>
+
+
+<p id="status">
+Your turn
+</p>
+
+
+<div
+id="board"
+class="board"
+></div>
+
+
+<button
+class="game-button"
+onclick="restart()"
+>
+Restart
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="../js/game-common.js"></script>
+
+
+<script>
+
+const boardElement =
+document.getElementById(
+    "board"
+);
+
+const statusElement =
+document.getElementById(
+    "status"
+);
+
+let board;
+
+let current =
+    "X";
+
+let gameOver =
+    false;
+
+
+const winningPatterns = [
+
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+
+    [0,4,8],
+    [2,4,6]
+
+];
+
+
+function restart() {
+
+    board =
+        Array(9).fill("");
+
+    current = "X";
+
+    gameOver = false;
+
+    render();
+
+}
+
+
+function render() {
+
+    boardElement.innerHTML =
+        "";
+
+    board.forEach(
+        (value,index) => {
+
+            const cell =
+                document.createElement(
+                    "button"
+                );
+
+            cell.className =
+                "cell";
+
+            cell.textContent =
+                value;
+
+            cell.onclick =
+                () => play(index);
+
+            boardElement.appendChild(
+                cell
+            );
+
+        }
+    );
+
+
+    statusElement.textContent =
+        gameOver
+            ? "Game finished"
+            : current === "X"
+                ? "Your turn"
+                : "Opponent turn";
+}
+
+
+function play(index) {
+
+    if (
+        gameOver ||
+        board[index]
+    ) {
+        return;
+    }
+
+
+    board[index] =
+        current;
+
+
+    if (
+        checkWinner(current)
+    ) {
+
+        gameOver = true;
+
+        statusElement.textContent =
+            current + " wins! 🎉";
+
+        saveResult(
+            current === "X"
+        );
+
+        render();
+
+        return;
+    }
+
+
+    if (
+        board.every(
+            value => value !== ""
+        )
+    ) {
+
+        gameOver = true;
+
+        statusElement.textContent =
+            "Draw!";
+
+        saveResult(false);
+
+        render();
+
+        return;
+    }
+
+
+    current =
+        current === "X"
+            ? "O"
+            : "X";
+
+
+    render();
+
+
+    if (
+        current === "O" &&
+        document.getElementById(
+            "mode"
+        ).value === "computer"
+    ) {
+
+        setTimeout(
+            computerMove,
+            350
+        );
+
+    }
+
+}
+
+
+function computerMove() {
+
+    if (gameOver) {
+        return;
+    }
+
+
+    const available =
+        board
+            .map(
+                (value,index) =>
+                    value === ""
+                        ? index
+                        : null
+            )
+            .filter(
+                value => value !== null
+            );
+
+
+    if (!available.length) {
+        return;
+    }
+
+
+    let selected =
+        available[
+            Math.floor(
+                Math.random() *
+                available.length
+            )
+        ];
+
+
+    for (
+        const index of available
+    ) {
+
+        board[index] = "O";
+
+        if (
+            checkWinner("O")
+        ) {
+
+            selected = index;
+
+            board[index] = "";
+
+            break;
+        }
+
+        board[index] = "";
+
+    }
+
+
+    if (
+        selected === undefined
+    ) {
+
+        selected =
+            available[0];
+
+    }
+
+
+    board[selected] =
+        "O";
+
+
+    if (
+        checkWinner("O")
+    ) {
+
+        gameOver = true;
+
+        render();
+
+        statusElement.textContent =
+            "Computer wins!";
+
+        saveResult(false);
+
+        return;
+
+    }
+
+
+    current = "X";
+
+    render();
+
+}
+
+
+function checkWinner(player) {
+
+    return winningPatterns.some(
+        pattern =>
+            pattern.every(
+                index =>
+                    board[index] ===
+                    player
+            )
+    );
+
+}
+
+
+async function saveResult(won) {
+
+    await finishGame(
+        "Tic-Tac-Toe",
+        won ? 100 : 10,
+        won
+    );
+
+}
+
+
+restart();
+
+</script>
+
+</body>
+
+</html>

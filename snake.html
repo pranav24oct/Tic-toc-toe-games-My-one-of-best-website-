@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<title>
+Neon Snake | TicToc
+</title>
+
+<link
+rel="stylesheet"
+href="../css/games.css"
+>
+
+<style>
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    color: white;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #064e3b,
+            #020617 70%
+        );
+}
+
+canvas {
+    width: min(90vw,450px);
+    height: min(90vw,450px);
+
+    background: #020617;
+
+    border: 2px solid #34d399;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 0 45px
+        rgba(52,211,153,.25);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game-page">
+
+<div class="game-wrapper">
+
+<a
+href="/"
+class="game-back"
+>
+← Back to TicToc
+</a>
+
+
+<h1 class="game-title">
+🐍 Neon Snake
+</h1>
+
+<p class="game-subtitle">
+Collect energy. Grow. Survive.
+</p>
+
+
+<div class="game-panel">
+
+<div class="game-stats">
+
+<div class="game-stat">
+Score:
+<span id="score">
+0
+</span>
+</div>
+
+<div class="game-stat">
+Best:
+<span id="best">
+0
+</span>
+</div>
+
+</div>
+
+
+<canvas
+id="canvas"
+width="450"
+height="450"
+></canvas>
+
+
+<br>
+
+
+<button
+class="game-button"
+onclick="startGame()"
+>
+Start / Restart
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="../js/game-common.js"></script>
+
+
+<script>
+
+const canvas =
+document.getElementById(
+    "canvas"
+);
+
+const ctx =
+canvas.getContext(
+    "2d"
+);
+
+const size = 30;
+
+let snake;
+let food;
+
+let dx;
+let dy;
+
+let score = 0;
+
+let timer = null;
+
+let best =
+Number(
+    localStorage.getItem(
+        "snakeBest"
+    ) || 0
+);
+
+
+document
+    .getElementById("best")
+    .textContent =
+    best;
+
+
+function resetGame() {
+
+    snake = [
+
+        {
+            x: 7,
+            y: 7
+        },
+
+        {
+            x: 6,
+            y: 7
+        },
+
+        {
+            x: 5,
+            y: 7
+        }
+
+    ];
+
+    dx = 1;
+    dy = 0;
+
+    score = 0;
+
+    document
+        .getElementById(
+            "score"
+        )
+        .textContent =
+        score;
+
+    food =
+        createFood();
+
+    draw();
+}
+
+
+function createFood() {
+
+    let result;
+
+    do {
+
+        result = {
+
+            x:
+                Math.floor(
+                    Math.random() * 15
+                ),
+
+            y:
+                Math.floor(
+                    Math.random() * 15
+                )
+
+        };
+
+    } while (
+        snake.some(
+            part =>
+                part.x === result.x &&
+                part.y === result.y
+        )
+    );
+
+    return result;
+}
+
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        450,
+        450
+    );
+
+
+    ctx.strokeStyle =
+        "rgba(52,211,153,.06)";
+
+
+    for (
+        let i = 0;
+        i < 15;
+        i++
+    ) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            i * size,
+            0
+        );
+
+        ctx.lineTo(
+            i * size,
+            450
+        );
+
+        ctx.stroke();
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            i * size
+        );
+
+        ctx.lineTo(
+            450,
+            i * size
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    snake.forEach(
+        (part,index) => {
+
+            ctx.fillStyle =
+                index === 0
+                    ? "#22d3ee"
+                    : "#34d399";
+
+            ctx.shadowBlur =
+                index === 0
+                    ? 20
+                    : 8;
+
+            ctx.shadowColor =
+                "#34d399";
+
+            ctx.beginPath();
+
+            ctx.roundRect(
+                part.x * size + 3,
+                part.y * size + 3,
+                size - 6,
+                size - 6,
+                8
+            );
+
+            ctx.fill();
+
+        }
+    );
+
+
+    ctx.shadowBlur = 20;
+
+    ctx.fillStyle =
+        "#f43f5e";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        food.x * size + 15,
+        food.y * size + 15,
+        10,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+}
+
+
+function update() {
+
+    const head = {
+
+        x:
+            snake[0].x + dx,
+
+        y:
+            snake[0].y + dy
+
+    };
+
+
+    if (
+
+        head.x < 0 ||
+
+        head.x >= 15 ||
+
+        head.y < 0 ||
+
+        head.y >= 15 ||
+
+        snake.some(
+            part =>
+                part.x === head.x &&
+                part.y === head.y
+        )
+
+    ) {
+
+        gameOver();
+
+        return;
+
+    }
+
+
+    snake.unshift(head);
+
+
+    if (
+
+        head.x === food.x &&
+        head.y === food.y
+
+    ) {
+
+        score++;
+
+        document
+            .getElementById(
+                "score"
+            )
+            .textContent =
+            score;
+
+
+        if (score > best) {
+
+            best = score;
+
+            localStorage.setItem(
+                "snakeBest",
+                best
+            );
+
+            document
+                .getElementById(
+                    "best"
+                )
+                .textContent =
+                best;
+
+        }
+
+
+        food =
+            createFood();
+
+    } else {
+
+        snake.pop();
+
+    }
+
+
+    draw();
+}
+
+
+async function gameOver() {
+
+    clearInterval(timer);
+
+    timer = null;
+
+    const result =
+        await finishGame(
+            "Snake",
+            score,
+            false
+        );
+
+    setTimeout(
+        () => {
+
+            alert(
+                "Game Over!\nScore: " +
+                score
+            );
+
+        },
+        100
+    );
+}
+
+
+function startGame() {
+
+    clearInterval(timer);
+
+    resetGame();
+
+    timer =
+        setInterval(
+            update,
+            100
+        );
+}
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "ArrowUp" &&
+            dy !== 1
+        ) {
+
+            dx = 0;
+            dy = -1;
+
+        }
+
+
+        if (
+            event.key === "ArrowDown" &&
+            dy !== -1
+        ) {
+
+            dx = 0;
+            dy = 1;
+
+        }
+
+
+        if (
+            event.key === "ArrowLeft" &&
+            dx !== 1
+        ) {
+
+            dx = -1;
+            dy = 0;
+
+        }
+
+
+        if (
+            event.key === "ArrowRight" &&
+            dx !== -1
+        ) {
+
+            dx = 1;
+            dy = 0;
+
+        }
+
+    }
+);
+
+
+resetGame();
+
+</script>
+
+</body>
+
+</html>

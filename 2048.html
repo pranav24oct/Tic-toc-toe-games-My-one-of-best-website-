@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<title>
+2048 Hyper | TicToc
+</title>
+
+<link
+rel="stylesheet"
+href="../css/games.css"
+>
+
+<style>
+
+body {
+    margin:0;
+    color:white;
+    font-family:Arial,sans-serif;
+
+    background:
+        radial-gradient(
+            circle,
+            #431407,
+            #020617 70%
+        );
+}
+
+.board {
+    width:360px;
+    height:360px;
+
+    max-width:90vw;
+    max-height:90vw;
+
+    padding:10px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:10px;
+
+    margin:25px auto;
+
+    background:#292524;
+
+    border-radius:20px;
+}
+
+.tile {
+    display:grid;
+    place-items:center;
+
+    border-radius:12px;
+
+    background:#44403c;
+
+    font-size:25px;
+
+    font-weight:bold;
+
+    transition:
+        transform .15s;
+}
+
+.tile.active {
+    transform:scale(1.04);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game-page">
+
+<div class="game-wrapper">
+
+<a
+href="/"
+class="game-back"
+>
+← Back to TicToc
+</a>
+
+
+<h1 class="game-title">
+🔢 2048 Hyper
+</h1>
+
+<p class="game-subtitle">
+Merge. Think. Reach the legendary tile.
+</p>
+
+
+<div class="game-panel">
+
+<div class="game-stats">
+
+<div class="game-stat">
+Score:
+<span id="score">
+0
+</span>
+</div>
+
+<div class="game-stat">
+Best:
+<span id="best">
+0
+</span>
+</div>
+
+</div>
+
+
+<div
+id="board"
+class="board"
+></div>
+
+
+<button
+class="game-button"
+onclick="newGame()"
+>
+New Game
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="../js/game-common.js"></script>
+
+
+<script>
+
+let grid;
+
+let score = 0;
+
+let best =
+Number(
+    localStorage.getItem(
+        "2048Best"
+    ) || 0
+);
+
+
+document
+    .getElementById(
+        "best"
+    )
+    .textContent =
+    best;
+
+
+function newGame() {
+
+    grid =
+        Array.from(
+            {
+                length:4
+            },
+            () =>
+                Array(4).fill(0)
+        );
+
+
+    score = 0;
+
+
+    addTile();
+
+    addTile();
+
+    render();
+
+}
+
+
+function addTile() {
+
+    const empty = [];
+
+
+    for (
+        let row = 0;
+        row < 4;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < 4;
+            col++
+        ) {
+
+            if (
+                grid[row][col] === 0
+            ) {
+
+                empty.push(
+                    [row,col]
+                );
+
+            }
+
+        }
+
+    }
+
+
+    if (!empty.length) {
+        return;
+    }
+
+
+    const position =
+        empty[
+            Math.floor(
+                Math.random() *
+                empty.length
+            )
+        ];
+
+
+    grid[
+        position[0]
+    ][
+        position[1]
+    ] =
+        Math.random() < .9
+            ? 2
+            : 4;
+
+}
+
+
+function compress(row) {
+
+    const result =
+        row.filter(
+            value =>
+                value !== 0
+        );
+
+
+    while (
+        result.length < 4
+    ) {
+
+        result.push(0);
+
+    }
+
+
+    return result;
+
+}
+
+
+function merge(row) {
+
+    for (
+        let i = 0;
+        i < 3;
+        i++
+    ) {
+
+        if (
+
+            row[i] !== 0 &&
+
+            row[i] ===
+                row[i + 1]
+
+        ) {
+
+            row[i] *= 2;
+
+            score +=
+                row[i];
+
+            row[i + 1] = 0;
+
+        }
+
+    }
+
+
+    return row;
+
+}
+
+
+function moveLeft() {
+
+    let changed = false;
+
+
+    for (
+        let r = 0;
+        r < 4;
+        r++
+    ) {
+
+        const old =
+            [...grid[r]];
+
+
+        let row =
+            compress(
+                grid[r]
+            );
+
+
+        row =
+            merge(row);
+
+
+        row =
+            compress(row);
+
+
+        grid[r] =
+            row;
+
+
+        if (
+            JSON.stringify(old) !==
+            JSON.stringify(row)
+        ) {
+
+            changed = true;
+
+        }
+
+    }
+
+
+    return changed;
+
+}
+
+
+function reverseRows() {
+
+    grid =
+        grid.map(
+            row =>
+                row.reverse()
+        );
+
+}
+
+
+function transpose() {
+
+    grid =
+        grid[0].map(
+            (_,column) =>
+                grid.map(
+                    row =>
+                        row[column]
+                )
+        );
+
+}
+
+
+function move(direction) {
+
+    let changed = false;
+
+
+    if (
+        direction ===
+        "left"
+    ) {
+
+        changed =
+            moveLeft();
+
+    }
+
+
+    if (
+        direction ===
+        "right"
+    ) {
+
+        reverseRows();
+
+        changed =
+            moveLeft();
+
+        reverseRows();
+
+    }
+
+
+    if (
+        direction ===
+        "up"
+    ) {
+
+        transpose();
+
+        changed =
+            moveLeft();
+
+        transpose();
+
+    }
+
+
+    if (
+        direction ===
+        "down"
+    ) {
+
+        transpose();
+
+        reverseRows();
+
+        changed =
+            moveLeft();
+
+        reverseRows();
+
+        transpose();
+
+    }
+
+
+    if (changed) {
+
+        addTile();
+
+        render();
+
+
+        if (
+            score > best
+        ) {
+
+            best =
+                score;
+
+            localStorage.setItem(
+                "2048Best",
+                best
+            );
+
+            document
+                .getElementById(
+                    "best"
+                )
+                .textContent =
+                best;
+
+        }
+
+
+        if (
+            hasWon()
+        ) {
+
+            finishGame(
+                "2048",
+                score,
+                true
+            );
+
+
+            setTimeout(
+                () => {
+
+                    alert(
+                        "You reached 2048! 🎉"
+                    );
+
+                },
+                100
+            );
+
+        }
+
+
+        if (
+            isGameOver()
+        ) {
+
+            finishGame(
+                "2048",
+                score,
+                false
+            );
+
+
+            setTimeout(
+                () => {
+
+                    alert(
+                        "Game Over!\nScore: " +
+                        score
+                    );
+
+                },
+                100
+            );
+
+        }
+
+    }
+
+}
+
+
+function hasWon() {
+
+    return grid.some(
+        row =>
+            row.includes(2048)
+    );
+
+}
+
+
+function isGameOver() {
+
+    for (
+        let row = 0;
+        row < 4;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < 4;
+            col++
+        ) {
+
+            if (
+                grid[row][col] === 0
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                col < 3 &&
+                grid[row][col] ===
+                    grid[row][col + 1]
+            ) {
+
+                return false;
+
+            }
+
+
+            if (
+                row < 3 &&
+                grid[row][col] ===
+                    grid[row + 1][col]
+            ) {
+
+                return false;
+
+            }
+
+        }
+
+    }
+
+
+    return true;
+
+}
+
+
+function render() {
+
+    const board =
+        document.getElementById(
+            "board"
+        );
+
+
+    board.innerHTML = "";
+
+
+    grid.forEach(
+        row => {
+
+            row.forEach(
+                value => {
+
+                    const tile =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    tile.className =
+                        "tile";
+
+
+                    tile.textContent =
+                        value || "";
+
+
+                    if (value) {
+
+                        tile.style.background =
+                            "#f97316";
+
+                        tile.style.color =
+                            "#ffffff";
+
+                        tile.classList.add(
+                            "active"
+                        );
+
+                    }
+
+
+                    board.appendChild(
+                        tile
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "score"
+        )
+        .textContent =
+        score;
+
+}
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        const keys = {
+
+            ArrowLeft:
+                "left",
+
+            ArrowRight:
+                "right",
+
+            ArrowUp:
+                "up",
+
+            ArrowDown:
+                "down",
+
+            a:
+                "left",
+
+            d:
+                "right",
+
+            w:
+                "up",
+
+            s:
+                "down"
+
+        };
+
+
+        if (
+            keys[event.key]
+        ) {
+
+            event.preventDefault();
+
+            move(
+                keys[event.key]
+            );
+
+        }
+
+    }
+);
+
+
+newGame();
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<title>
+Player Profile | TicToc
+</title>
+
+<link
+rel="stylesheet"
+href="css/style.css"
+>
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+<a
+href="/"
+class="logo"
+>
+◆ TicToc <b>Toy</b>
+</a>
+
+<a
+href="/"
+class="secondary-button"
+>
+← Games
+</a>
+
+</header>
+
+
+<main
+style="
+width:min(1100px,90%);
+margin:70px auto;
+"
+>
+
+<span class="section-label">
+PLAYER PROFILE
+</span>
+
+<h1
+class="section-title"
+style="
+margin-bottom:35px;
+"
+>
+Your Gaming
+<span class="gradient-text">
+Identity
+</span>
+</h1>
+
+
+<section
+class="game-card"
+style="
+padding:35px;
+"
+>
+
+<div
+style="
+display:flex;
+align-items:center;
+gap:25px;
+flex-wrap:wrap;
+"
+>
+
+<div
+style="
+width:105px;
+height:105px;
+border-radius:50%;
+display:grid;
+place-items:center;
+font-size:45px;
+background:
+linear-gradient(
+135deg,
+#8b5cf6,
+#22d3ee
+);
+"
+>
+🎮
+</div>
+
+
+<div>
+
+<h2 id="profileName">
+Loading...
+</h2>
+
+<p
+id="profileEmail"
+style="
+color:var(--muted);
+"
+>
+Loading...
+</p>
+
+<div
+style="
+margin-top:8px;
+color:#fbbf24;
+"
+>
+⭐ Level
+<span id="profileLevel">
+1
+</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div
+style="
+margin-top:30px;
+"
+>
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+margin-bottom:7px;
+color:var(--muted);
+"
+>
+
+<span>
+XP Progress
+</span>
+
+<span id="xpText">
+0 / 500
+</span>
+
+</div>
+
+<div
+style="
+height:12px;
+background:#1e293b;
+border-radius:20px;
+overflow:hidden;
+"
+>
+
+<div
+id="xpBar"
+style="
+height:100%;
+width:0%;
+background:
+linear-gradient(
+90deg,
+#8b5cf6,
+#22d3ee
+);
+transition:1s;
+"
+>
+</div>
+
+</div>
+
+</div>
+
+
+<div
+class="stats-strip"
+style="
+width:100%;
+margin:35px 0 0;
+"
+>
+
+<div class="stat-box">
+
+<span
+id="coins"
+class="stat-number"
+>
+0
+</span>
+
+<span class="stat-label">
+💎 Coins
+</span>
+
+</div>
+
+
+<div class="stat-box">
+
+<span
+id="gamesPlayed"
+class="stat-number"
+>
+0
+</span>
+
+<span class="stat-label">
+Games Played
+</span>
+
+</div>
+
+
+<div class="stat-box">
+
+<span
+id="bestScore"
+class="stat-number"
+>
+0
+</span>
+
+<span class="stat-label">
+Best Score
+</span>
+
+</div>
+
+
+<div class="stat-box">
+
+<span
+id="wins"
+class="stat-number"
+>
+0
+</span>
+
+<span class="stat-label">
+Wins
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section
+class="section"
+style="
+width:100%;
+margin-top:70px;
+"
+>
+
+<span class="section-label">
+GAME STATISTICS
+</span>
+
+<h2 class="section-title">
+Your
+<span class="gradient-text">
+Performance
+</span>
+</h2>
+
+
+<div
+id="gameStats"
+class="games-grid"
+style="
+margin-top:30px;
+"
+>
+Loading...
+</div>
+
+</section>
+
+
+<section
+class="section"
+style="
+width:100%;
+"
+>
+
+<span class="section-label">
+ACHIEVEMENTS
+</span>
+
+<h2 class="section-title">
+Your
+<span class="gradient-text">
+Trophies
+</span>
+</h2>
+
+
+<div
+id="achievements"
+class="games-grid"
+style="
+margin-top:30px;
+"
+>
+Loading...
+</div>
+
+</section>
+
+
+<section
+class="section"
+style="
+width:100%;
+"
+>
+
+<span class="section-label">
+FAVORITES
+</span>
+
+<h2 class="section-title">
+Saved
+<span class="gradient-text">
+Games
+</span>
+</h2>
+
+
+<div
+id="favorites"
+style="
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:25px;
+"
+>
+Loading...
+</div>
+
+</section>
+
+
+<button
+class="primary-button"
+onclick="logout()"
+>
+Logout
+</button>
+
+</main>
+
+
+<script>
+
+async function loadProfile() {
+
+    const response =
+        await fetch(
+            "/api/profile"
+        );
+
+    if (response.status === 401) {
+
+        window.location.href =
+            "/";
+
+        return;
+    }
+
+    const data =
+        await response.json();
+
+    const user =
+        data.user;
+
+    const stats =
+        data.stats;
+
+
+    document
+        .getElementById(
+            "profileName"
+        )
+        .textContent =
+        user.name;
+
+
+    document
+        .getElementById(
+            "profileEmail"
+        )
+        .textContent =
+        user.email;
+
+
+    document
+        .getElementById(
+            "profileLevel"
+        )
+        .textContent =
+        user.level;
+
+
+    document
+        .getElementById(
+            "coins"
+        )
+        .textContent =
+        user.coins;
+
+
+    document
+        .getElementById(
+            "gamesPlayed"
+        )
+        .textContent =
+        stats.gamesPlayed;
+
+
+    document
+        .getElementById(
+            "bestScore"
+        )
+        .textContent =
+        stats.bestScore;
+
+
+    document
+        .getElementById(
+            "wins"
+        )
+        .textContent =
+        stats.wins;
+
+
+    const currentLevelStart =
+        (user.level - 1) * 500;
+
+    const levelXP =
+        user.xp -
+        currentLevelStart;
+
+    const requiredXP =
+        user.level * 500 -
+        currentLevelStart;
+
+    const percentage =
+        Math.min(
+            100,
+            (levelXP / requiredXP) * 100
+        );
+
+
+    document
+        .getElementById(
+            "xpText"
+        )
+        .textContent =
+        `${levelXP} / ${requiredXP}`;
+
+
+    document
+        .getElementById(
+            "xpBar"
+        )
+        .style.width =
+        percentage + "%";
+
+
+    loadGameStats(
+        data.gameStats
+    );
+
+    loadAchievements(
+        data.achievements
+    );
+
+    loadFavorites(
+        data.favorites
+    );
+
+}
+
+
+function loadGameStats(stats) {
+
+    const container =
+        document.getElementById(
+            "gameStats"
+        );
+
+    if (!stats.length) {
+
+        container.innerHTML = `
+            <div class="game-card">
+                <div class="game-card-content">
+                    No games played yet.
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        stats
+            .map(
+                item => `
+                <div class="game-card">
+
+                    <div class="game-card-content">
+
+                        <span class="game-type">
+                            ${item.game}
+                        </span>
+
+                        <h3>
+                            Best:
+                            ${item.best}
+                        </h3>
+
+                        <p>
+                            Played:
+                            ${item.played}
+                            <br>
+                            Wins:
+                            ${item.wins}
+                        </p>
+
+                    </div>
+
+                </div>
+            `
+            )
+            .join("");
+
+}
+
+
+function loadAchievements(items) {
+
+    const container =
+        document.getElementById(
+            "achievements"
+        );
+
+    if (!items.length) {
+
+        container.innerHTML = `
+            <div class="game-card">
+                <div class="game-card-content">
+                    <h3>
+                        🔒 No achievements yet
+                    </h3>
+                    <p>
+                        Play games to unlock
+                        your first achievement.
+                    </p>
+                </div>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        items
+            .map(
+                item => `
+                <div class="game-card">
+
+                    <div class="game-card-content">
+
+                        <div
+                            style="
+                            font-size:45px;
+                            "
+                        >
+                            🏆
+                        </div>
+
+                        <h3>
+                            ${item.achievement}
+                        </h3>
+
+                        <p>
+                            Achievement unlocked!
+                        </p>
+
+                    </div>
+
+                </div>
+            `
+            )
+            .join("");
+
+}
+
+
+function loadFavorites(items) {
+
+    const container =
+        document.getElementById(
+            "favorites"
+        );
+
+    if (!items.length) {
+
+        container.innerHTML =
+            "No favorite games yet.";
+
+        return;
+    }
+
+
+    container.innerHTML =
+        items
+            .map(
+                item => `
+                    <a
+                        href="/games/${getGameURL(item.game)}"
+                        class="secondary-button"
+                    >
+                        ❤️ ${item.game}
+                    </a>
+                `
+            )
+            .join("");
+
+}
+
+
+function getGameURL(game) {
+
+    const map = {
+
+        "Snake":
+            "snake.html",
+
+        "Tic-Tac-Toe":
+            "tic-tac-toe.html",
+
+        "Brick Breaker":
+            "brick-breaker.html",
+
+        "Pong":
+            "pong.html",
+
+        "Memory Match":
+            "memory-match.html",
+
+        "2048":
+            "2048.html"
+
+    };
+
+    return map[game] ||
+        "snake.html";
+}
+
+
+async function logout() {
+
+    await fetch(
+        "/api/logout",
+        {
+            method: "POST"
+        }
+    );
+
+    window.location.href =
+        "/";
+}
+
+
+loadProfile();
+
+</script>
+
+</body>
+
+</html>

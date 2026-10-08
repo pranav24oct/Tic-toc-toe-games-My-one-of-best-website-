@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1.0"
+>
+
+<title>
+Brick Breaker | TicToc
+</title>
+
+<link
+rel="stylesheet"
+href="../css/games.css"
+>
+
+<style>
+
+body {
+    margin:0;
+    color:white;
+    font-family:Arial,sans-serif;
+
+    background:
+        radial-gradient(
+            circle,
+            #431407,
+            #020617 70%
+        );
+}
+
+canvas {
+    max-width:95vw;
+
+    background:#020617;
+
+    border:
+        2px solid #fb923c;
+
+    border-radius:20px;
+
+    box-shadow:
+        0 0 45px
+        rgba(251,146,60,.25);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game-page">
+
+<div class="game-wrapper">
+
+<a
+href="/"
+class="game-back"
+>
+← Back to TicToc
+</a>
+
+<h1 class="game-title">
+🧱 Brick Breaker
+</h1>
+
+<p class="game-subtitle">
+Break the wall. Chase the high score.
+</p>
+
+
+<div class="game-panel">
+
+<div class="game-stats">
+
+<div class="game-stat">
+Score:
+<span id="score">
+0
+</span>
+</div>
+
+<div class="game-stat">
+Lives:
+<span id="lives">
+3
+</span>
+</div>
+
+</div>
+
+
+<canvas
+id="canvas"
+width="600"
+height="500"
+></canvas>
+
+
+<br>
+
+
+<button
+class="game-button"
+onclick="startGame()"
+>
+Start / Restart
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="../js/game-common.js"></script>
+
+
+<script>
+
+const canvas =
+document.getElementById(
+    "canvas"
+);
+
+const ctx =
+canvas.getContext(
+    "2d"
+);
+
+let ball;
+let paddle;
+let bricks;
+
+let score = 0;
+let lives = 3;
+
+let animation = null;
+
+
+function createBricks() {
+
+    bricks = [];
+
+    for (
+        let row = 0;
+        row < 5;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < 9;
+            col++
+        ) {
+
+            bricks.push({
+
+                x:
+                    25 + col * 62,
+
+                y:
+                    50 + row * 28,
+
+                width:
+                    52,
+
+                height:
+                    18,
+
+                alive:
+                    true
+
+            });
+
+        }
+
+    }
+
+}
+
+
+function startGame() {
+
+    cancelAnimationFrame(
+        animation
+    );
+
+
+    score = 0;
+
+    lives = 3;
+
+
+    document
+        .getElementById("score")
+        .textContent =
+        score;
+
+
+    document
+        .getElementById("lives")
+        .textContent =
+        lives;
+
+
+    paddle = {
+
+        x: 250,
+
+        y: 460,
+
+        width: 100,
+
+        height: 12
+
+    };
+
+
+    ball = {
+
+        x: 300,
+
+        y: 350,
+
+        dx: 4,
+
+        dy: -4,
+
+        radius: 8
+
+    };
+
+
+    createBricks();
+
+    loop();
+
+}
+
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    bricks.forEach(
+        brick => {
+
+            if (!brick.alive) {
+                return;
+            }
+
+            ctx.fillStyle =
+                "#f97316";
+
+            ctx.fillRect(
+                brick.x,
+                brick.y,
+                brick.width,
+                brick.height
+            );
+
+        }
+    );
+
+
+    ctx.fillStyle =
+        "#22d3ee";
+
+    ctx.fillRect(
+        paddle.x,
+        paddle.y,
+        paddle.width,
+        paddle.height
+    );
+
+
+    ctx.fillStyle =
+        "#fef08a";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        ball.x,
+        ball.y,
+        ball.radius,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+}
+
+
+function update() {
+
+    ball.x += ball.dx;
+
+    ball.y += ball.dy;
+
+
+    if (
+        ball.x <= 8 ||
+        ball.x >=
+            canvas.width - 8
+    ) {
+
+        ball.dx *= -1;
+
+    }
+
+
+    if (
+        ball.y <= 8
+    ) {
+
+        ball.dy *= -1;
+
+    }
+
+
+    if (
+
+        ball.y + ball.radius >=
+            paddle.y &&
+
+        ball.x >=
+            paddle.x &&
+
+        ball.x <=
+            paddle.x +
+            paddle.width
+
+    ) {
+
+        ball.dy =
+            -Math.abs(
+                ball.dy
+            );
+
+    }
+
+
+    bricks.forEach(
+        brick => {
+
+            if (
+                !brick.alive
+            ) {
+                return;
+            }
+
+
+            if (
+
+                ball.x >
+                    brick.x &&
+
+                ball.x <
+                    brick.x +
+                    brick.width &&
+
+                ball.y >
+                    brick.y &&
+
+                ball.y <
+                    brick.y +
+                    brick.height
+
+            ) {
+
+                brick.alive =
+                    false;
+
+                ball.dy *= -1;
+
+                score += 10;
+
+                document
+                    .getElementById(
+                        "score"
+                    )
+                    .textContent =
+                    score;
+
+            }
+
+        }
+    );
+
+
+    if (
+        ball.y >
+        canvas.height
+    ) {
+
+        lives--;
+
+        document
+            .getElementById(
+                "lives"
+            )
+            .textContent =
+            lives;
+
+
+        if (lives <= 0) {
+
+            endGame(false);
+
+            return;
+
+        }
+
+
+        ball.x = 300;
+
+        ball.y = 350;
+
+        ball.dx = 4;
+
+        ball.dy = -4;
+
+    }
+
+
+    if (
+        bricks.every(
+            brick =>
+                !brick.alive
+        )
+    ) {
+
+        endGame(true);
+
+        return;
+
+    }
+
+}
+
+
+async function endGame(won) {
+
+    cancelAnimationFrame(
+        animation
+    );
+
+    await finishGame(
+        "Brick Breaker",
+        score,
+        won
+    );
+
+
+    setTimeout(
+        () => {
+
+            alert(
+                won
+                    ? "You destroyed everything! 🎉"
+                    : "Game Over! Score: " +
+                        score
+            );
+
+        },
+        100
+    );
+
+}
+
+
+function loop() {
+
+    update();
+
+    draw();
+
+    animation =
+        requestAnimationFrame(
+            loop
+        );
+
+}
+
+
+document.addEventListener(
+    "mousemove",
+    event => {
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        paddle.x =
+            event.clientX -
+            rect.left -
+            paddle.width / 2;
+
+
+        paddle.x =
+            Math.max(
+                0,
+                Math.min(
+                    canvas.width -
+                        paddle.width,
+                    paddle.x
+                )
+            );
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key ===
+            "ArrowLeft"
+        ) {
+
+            paddle.x -= 30;
+
+        }
+
+
+        if (
+            event.key ===
+            "ArrowRight"
+        ) {
+
+            paddle.x += 30;
+
+        }
+
+    }
+);
+
+
+startGame();
+
+</script>
+
+</body>
+
+</html>
