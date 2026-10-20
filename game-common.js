@@ -1,3 +1,26 @@
+
+function gameSoundEnabled() {
+    try { return JSON.parse(localStorage.getItem("tictoc-preferences") || "{}").soundEnabled !== false; }
+    catch { return true; }
+}
+
+function playGameNoticeSound() {
+    if (!gameSoundEnabled()) return;
+    try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        const context = new AudioContextClass();
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = "sine"; oscillator.frequency.value = 660;
+        gain.gain.setValueAtTime(0.045, context.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.12);
+        oscillator.connect(gain); gain.connect(context.destination);
+        oscillator.start(); oscillator.stop(context.currentTime + 0.12);
+        oscillator.onended = () => context.close();
+    } catch { /* Audio is optional; never block game flow. */ }
+}
+
 async function finishGame(
     game,
     score,
@@ -45,6 +68,11 @@ async function finishGame(
         const data =
             await response.json();
 
+        if (!response.ok || !data.success) {
+            showGameMessage(data.message || "Score could not be saved.");
+            return { loggedIn: true, score, saved: false };
+        }
+
         if (data.unlocked) {
 
             data.unlocked.forEach(
@@ -66,6 +94,7 @@ async function finishGame(
         return {
             ...data,
             loggedIn: true,
+            saved: true,
             score
         };
 
@@ -132,6 +161,7 @@ function showGameMessage(message) {
 
     box.textContent =
         message;
+    playGameNoticeSound();
 
     box.style.opacity =
         "1";
