@@ -70,9 +70,13 @@
 
         <button
             class="icon-button"
-            onclick="toggleTheme()"
+            id="settingsButton"
+            aria-expanded="false"
+            aria-controls="settingsPanel"
+            onclick="toggleSettingsPanel()"
+            title="Personalization settings"
         >
-            ◐
+            ⚙
         </button>
 
         <button
@@ -87,6 +91,19 @@
 
 </header>
 
+<section id="settingsPanel" class="settings-panel hidden" aria-label="Personalization settings">
+    <div class="settings-heading"><div><span class="section-label">PERSONALIZATION</span><h2>Make it yours</h2></div><button class="icon-button" onclick="toggleSettingsPanel()" aria-label="Close settings">✕</button></div>
+    <div class="theme-options" role="group" aria-label="Choose theme">
+        <button class="theme-option" data-theme-choice="cyberpunk" onclick="setTheme('cyberpunk')"><span class="theme-swatch cyberpunk-swatch"></span><strong>Cyberpunk</strong><small>Neon city</small></button>
+        <button class="theme-option" data-theme-choice="space" onclick="setTheme('space')"><span class="theme-swatch space-swatch"></span><strong>Space Galaxy</strong><small>Cosmic dark</small></button>
+        <button class="theme-option" data-theme-choice="retro" onclick="setTheme('retro')"><span class="theme-swatch retro-swatch"></span><strong>Retro Arcade</strong><small>Pixel energy</small></button>
+    </div>
+    <div class="setting-toggles">
+        <label><span><strong>Sound effects</strong><small>Game audio preference</small></span><input id="soundSetting" type="checkbox" checked onchange="setPreference('soundEnabled', this.checked)"></label>
+        <label><span><strong>Animations</strong><small>Motion and card effects</small></span><input id="animationSetting" type="checkbox" checked onchange="setPreference('animationsEnabled', this.checked)"></label>
+    </div>
+    <p class="settings-note" id="settingsStatus">Preferences save on this device and sync to your account when logged in.</p>
+</section>
 
 <main>
 
@@ -449,6 +466,7 @@
                     <a
                         href="games/tic-tac-toe.html"
                         class="play-button"
+                        onclick="recordGame('Tic-Tac-Toe')"
                     >
                         Play →
                     </a>
@@ -511,6 +529,7 @@
                     <a
                         href="games/brick-breaker.html"
                         class="play-button"
+                        onclick="recordGame('Brick Breaker')"
                     >
                         Play →
                     </a>
@@ -572,6 +591,7 @@
                     <a
                         href="games/pong.html"
                         class="play-button"
+                        onclick="recordGame('Pong')"
                     >
                         Play →
                     </a>
@@ -633,6 +653,7 @@
                     <a
                         href="games/memory-match.html"
                         class="play-button"
+                        onclick="recordGame('Memory Match')"
                     >
                         Play →
                     </a>
@@ -700,6 +721,7 @@
                     <a
                         href="games/2048.html"
                         class="play-button"
+                        onclick="recordGame('2048')"
                     >
                         Play →
                     </a>
@@ -710,10 +732,31 @@
 
         </article>
 
+
+
+        <!-- NEON RUNNER: original 3D endless runner -->
+        <article class="game-card" data-category="action" data-name="neon runner 3d endless runner">
+            <div class="game-card-art"><span class="game-emoji" aria-hidden="true">🏃‍♂️</span></div>
+            <div class="game-card-content">
+                <span class="game-type">ACTION · 3D</span>
+                <h3>Neon Runner</h3>
+                <p>Dash through a neon city, dodge barriers, and collect energy in this 3D endless runner.</p>
+                <div class="game-actions">
+                    <button class="favorite-button" data-game="Neon Runner" onclick="toggleFavorite('Neon Runner')" aria-label="Add Neon Runner to favorites">♡</button>
+                    <a href="games/neon-runner.html" class="play-button" onclick="recordGame('Neon Runner')">Play →</a>
+                </div>
+            </div>
+        </article>
+
     </div>
 
 </section>
 
+
+<section id="recentlyPlayedSection" class="section recent-section hidden">
+    <div class="section-header"><div><span class="section-label">PICK UP WHERE YOU LEFT OFF</span><h2 class="section-title">Recently <span class="gradient-text">played</span></h2></div></div>
+    <div id="recentGames" class="recent-games"></div>
+</section>
 
 <section
     id="challenge"
@@ -746,12 +789,10 @@
         </div>
 
 
-        <a
-            href="#games"
-            class="primary-button"
-        >
-            Accept →
-        </a>
+        <div class="challenge-actions">
+            <a href="#games" class="secondary-button">Find game</a>
+            <button id="challengeClaimButton" class="primary-button" onclick="claimDailyChallenge()">Check challenge →</button>
+        </div>
 
     </div>
 
@@ -759,7 +800,7 @@
 
 
 <section
-    id="leaderboard"
+    id="leaderboardSection"
     class="section"
 >
 
@@ -845,25 +886,21 @@
 
             <div class="feature-list">
 
-                <div class="feature">
-                    <b>01</b>
-                    Creative Design
-                </div>
+                <button class="feature feature-action" type="button" onclick="openCreativeDesign()" aria-label="Open creative design settings">
+                    <b>01</b> Creative Design <span class="feature-arrow" aria-hidden="true">↗</span>
+                </button>
 
-                <div class="feature">
-                    <b>02</b>
-                    Player Progress
-                </div>
+                <a class="feature feature-action" href="/profile.html" aria-label="Open player profile and progress">
+                    <b>02</b> Player Progress <span class="feature-arrow" aria-hidden="true">↗</span>
+                </a>
 
-                <div class="feature">
-                    <b>03</b>
-                    Daily Challenges
-                </div>
+                <a class="feature feature-action" href="#challenge" aria-label="Go to daily challenges">
+                    <b>03</b> Daily Challenges <span class="feature-arrow" aria-hidden="true">↗</span>
+                </a>
 
-                <div class="feature">
-                    <b>04</b>
-                    Global Scores
-                </div>
+                <a class="feature feature-action" href="#leaderboardSection" aria-label="Go to global scores">
+                    <b>04</b> Global Scores <span class="feature-arrow" aria-hidden="true">↗</span>
+                </a>
 
             </div>
 
