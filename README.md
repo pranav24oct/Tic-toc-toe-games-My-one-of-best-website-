@@ -1,241 +1,112 @@
-# 🎮 TicToc Toy Games
+🎮 TicToc Toy Games
+A creative and interactive browser-based gaming website where players can play mini-games, track progress, and compete on a leaderboard.
+✨ Features
+- 🎮 Multiple playable games
+- 🏃 Neon Runner: original Three.js-inspired 3D endless runner
+- 🔐 User login and registration
+- 👤 User profile
+- ⭐ XP and coins system
+- 🏆 Global leaderboard
+- ❤️ Favorite games and 🔎 game search
+- 🎯 Daily challenges
+- 🏅 Achievements and 📊 game statistics
+- 🌌 Neon-style interface with 3D effects
+- 📱 Responsive design
+- 💾 SQLite database
+- ⚡ Node.js + Express backend
+🕹️ Available Games
+Game	Type	Description
+🐍 Snake Neon Rush	Arcade	Control the snake and collect food while increasing your score.
+❌ Tic-Tac-Toe Quantum	Strategy	Play Tic-Tac-Toe with a modern neon design.
+🧱 Brick Breaker Pulse	Arcade	Break glowing bricks and reach higher levels.
+🏓 Pong Cyber Duel	Arcade	Challenge the computer in a futuristic Pong battle.
+🧠 Memory Match Galaxy	Puzzle	Match the correct cards and improve your memory.
+🔢 2048 Infinity	Puzzle	Combine matching numbers and try to reach 2048.
+🏃 Neon Runner	3D endless runner	Switch lanes, jump, slide, avoid obstacles, collect energy coins, and beat your distance score.
 
-A creative and interactive browser-based gaming website where users can play multiple mini-games in one place.
 
-## ✨ Features
+🏃 Neon Runner
+Neon Runner is an original endless-runner game built with Three.js and integrated into the TicToc Toy Games website. It uses original game code and generated 3D shapes rather than copying Subway Surfers' proprietary code or assets.
+Gameplay features
+- Three-lane running track with a neon-city style environment
+- Lane switching, jumping, and sliding
+- Obstacles and collectible energy coins
+- Increasing speed and distance-based scoring
+- Pause and restart controls
+- Keyboard and mobile touch controls
+- Local best-distance tracking
+- Score submission through the existing /api/score endpoint for logged-in players
+Controls
+Action	Keyboard	Mobile touch
+Move left/right	Left/Right arrows or A/D	Swipe left/right or use on-screen controls
+Jump	Up arrow, W, or Space	Swipe up or use the jump control
+Slide	Down arrow or S	Swipe down or use the slide control
+Pause	P or Escape	Pause button
 
-* 🎮 Multiple playable games
-* 🔐 User Login & Registration
-* 👤 User Profile
-* ⭐ XP and Coins system
-* 🏆 Leaderboard
-* ❤️ Favorite games
-* 🔎 Game search
-* 🎯 Daily Challenge
-* 🏅 Achievements
-* 📊 Game scores and statistics
-* 🌌 Modern 3D-style gaming interface
-* 📱 Responsive design
-* 💾 SQLite database
-* ⚡ Node.js + Express backend
 
-## 🕹️ Available Games
-
-| Game                   | Type     | Description                                                     |
-| ---------------------- | -------- | --------------------------------------------------------------- |
-| 🐍 Snake Neon Rush     | Arcade   | Control the snake and collect food while increasing your score. |
-| ❌ Tic-Tac-Toe Quantum  | Strategy | Play Tic-Tac-Toe with a modern neon design.                     |
-| 🧱 Brick Breaker Pulse | Arcade   | Break glowing bricks and reach higher levels.                   |
-| 🏓 Pong Cyber Duel     | Arcade   | Challenge the computer in a futuristic Pong battle.             |
-| 🧠 Memory Match Galaxy | Puzzle   | Match the correct cards and improve your memory.                |
-| 🔢 2048 Infinity       | Puzzle   | Combine matching numbers and try to reach 2048.                 |
-
-## 🛠️ Technologies Used
-
-### Frontend
-
-* HTML5
-* CSS3
-* JavaScript
-* CSS Animations
-* Responsive Design
-
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* SQLite
-
-### Authentication
-
-* Express Session
-* bcryptjs
-
-## 📁 Project Structure
-
-```text
+Three.js is loaded from a CDN, so an internet connection is required to load the game library.
+🛠️ Technologies Used
+- Frontend: HTML5, CSS3, JavaScript, Three.js
+- Backend: Node.js, Express.js
+- Database: SQLite
+- Authentication: Express Session, bcryptjs
+📁 Project Structure
 TicToc-Toy-Games/
-│
 ├── package.json
+├── package-lock.json
 ├── server.js
+├── database.js
 ├── README.md
-│
-├── data/
-│   └── games.db
-│
 └── public/
-    │
     ├── index.html
-    │
     ├── css/
     │   ├── style.css
-    │   └── game.css
-    │
+    │   ├── games.css
+    │   └── neon-runner.css
     ├── js/
     │   ├── app.js
-    │   └── game-common.js
-    │
-    ├── assets/
-    │   ├── game-snake.svg
-    │   ├── game-tictactoe.svg
-    │   ├── game-brick-breaker.svg
-    │   ├── game-pong.svg
-    │   ├── game-memory.svg
-    │   └── game-2048.svg
-    │
+    │   ├── game-common.js
+    │   └── neon-runner.js
     └── games/
         ├── snake.html
         ├── tic-tac-toe.html
         ├── brick-breaker.html
         ├── pong.html
         ├── memory-match.html
-        └── 2048.html
-```
+        ├── 2048.html
+        └── neon-runner.html
+Your local project version may contain additional files or slightly different paths. Preserve your existing database, configuration, and game files when updating the project.
+🚀 How to Run Locally
+1. Install Node.js and verify it:
+   node --version
+   npm --version
+2. Open a terminal in the extracted project folder.
+3. Install dependencies:
+   npm install
+4. Start the server:
+   npm start
+5. Open http://localhost:3000 in your browser.
+Use the Express server URL rather than opening index.html directly or using Live Server on port 5500; frontend API calls need to reach the Express backend.
 
-## 🚀 How to Run Locally
+To open Neon Runner directly, visit:
+http://localhost:3000/games/neon-runner.html
+Sign in to submit scores if the existing score API requires authentication. If scores do not appear, inspect the browser console and the response from /api/score.
+🔐 User System
+The platform includes registration, login, logout, profiles, game statistics, favorites, XP, coins, achievements, and leaderboard features. Passwords are stored using password hashing rather than plain text.
+🏆 Achievements and Daily Challenges
+Players can unlock achievements by playing games and improving their performance. Example achievements include First Play, Score Hunter, Arcade Rookie, Winner, Explorer, Master, and All Rounder.
 
-### 1. Install Node.js
-
-Install Node.js on your computer.
-
-Check the installation:
-
-```bash
-node --version
-npm --version
-```
-
-### 2. Clone the Repository
-
-```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
-```
-
-### 3. Open the Project
-
-```bash
-cd TicToc-Toy-Games
-```
-
-### 4. Install Dependencies
-
-```bash
-npm install
-```
-
-### 5. Start the Server
-
-```bash
-npm start
-```
-
-The server will run on:
-
-```text
-http://localhost:3000
-```
-
-Open that address in your browser.
-
-## 🎯 How to Play
-
-1. Open the website.
-2. Create an account or log in.
-3. Browse the available games.
-4. Select a game.
-5. Play and earn scores.
-6. Complete daily challenges.
-7. Collect XP and coins.
-8. Check your profile and leaderboard.
-
-## 🔐 User System
-
-The website provides:
-
-* Registration
-* Login
-* Logout
-* Profile
-* Game statistics
-* Favorite games
-* XP
-* Coins
-* Achievements
-* Leaderboard
-
-Passwords are stored using password hashing rather than plain text.
-
-## 🏆 Achievement System
-
-Players can unlock achievements by playing games and improving their performance.
-
-Examples:
-
-* 🟢 First Play
-* ⭐ Score Hunter
-* 🎮 Arcade Rookie
-* 🏆 Winner
-* 🌎 Explorer
-* 👑 Master
-* 💎 All Rounder
-
-## 🎯 Daily Challenge
-
-A daily challenge gives players an additional goal.
-
-Players can complete the challenge by reaching the required score in the selected game.
-
-Successful completion rewards additional XP and coins.
-
-## 🎨 Design
-
-TicToc Toy Games uses a modern gaming interface with:
-
-* Glassmorphism
-* Neon-style effects
-* Gradient backgrounds
-* Animated elements
-* 3D-style game cards
-* Smooth transitions
-* Responsive layouts
-
-## 📱 Browser Support
-
-The website is designed to work with modern browsers such as:
-
-* Google Chrome
-* Microsoft Edge
-* Mozilla Firefox
-* Safari
-
-## ⚠️ Important
-
-The SQLite database is generated locally when the server runs.
-
-For a production deployment, additional configuration should be added for:
-
-* Persistent sessions
-* Production database hosting
-* Environment variables
-* HTTPS
-* Security headers
-* Production authentication configuration
-
-## 👨‍💻 Project
-
-**Project Name:** TicToc Toy Games
-
-**Type:** Web Development / Gaming Platform
-
-**Main Technologies:** HTML, CSS, JavaScript, Node.js, Express.js, SQLite
-
----
-
-### ⭐ If you like the project
-
-Give the repository a ⭐ on GitHub and share it with other gamers and developers.
-
-**Play. Challenge. Improve. Repeat. 🎮**
+Daily challenges provide an additional goal. Challenge information is supplied by the existing daily-challenge API; completion and rewards depend on the current backend implementation.
+🎨 Design and Browser Support
+The site uses neon-style effects, gradient backgrounds, animated elements, 3D-style game cards, smooth transitions, and responsive layouts. It is intended for modern browsers such as Chrome, Edge, Firefox, and Safari. Three.js requires a supported browser and an internet connection when loaded from its CDN.
+⚠️ Important Notes
+- Back up the project folder and database before replacing or modifying files.
+- Keep the Express server running while using the website.
+- If .env is missing, the development server may use a temporary session secret. Configure a persistent SESSION_SECRET in .env for stable sessions.
+- For production, configure persistent sessions, environment variables, HTTPS, security headers, and suitable database hosting.
+- Syntax and archive checks do not replace browser testing. Test gameplay, score saving, and all existing games locally before deployment.
+👨‍💻 Project
+Project Name: TicToc Toy Games
+Type: Web Development / Gaming Platform
+Main Technologies: HTML, CSS, JavaScript, Three.js, Node.js, Express.js, SQLite
+Play. Challenge. Improve. Repeat. 🎮
