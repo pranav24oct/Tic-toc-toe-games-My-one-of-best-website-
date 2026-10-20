@@ -1,5 +1,8 @@
 node_modules/
+.env
+*.log
+.DS_Store
+# Keep the local database out of source control; the project ZIP preserves the supplied database.
 tictoc.db
 *.db-shm
 *.db-wal
-.env
