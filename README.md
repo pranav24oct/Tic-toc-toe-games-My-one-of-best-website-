@@ -110,10 +110,6 @@ Project Name: TicToc Toy Games
 Type: Web Development / Gaming Platform
 Main Technologies: HTML, CSS, JavaScript, Three.js, Node.js, Express.js, SQLite
 Play. Challenge. Improve. Repeat. 🎮
-<img width="1703" height="772" alt="Screenshot 2026-10-20 193742" src="https://github.com/user-attachments/assets/a6edd98e-5a53-4581-a930-84837b6112e3" />
-<img width="1651" height="628" alt="Screenshot 2026-10-20 210106" src="https://github.com/user-attachments/assets/9a0703ac-22ed-4941-8a3c-e28e589cdc5e" />
-<img width="877" height="605" alt="Screenshot 2026-10-20 210525" src="https://github.com/user-attachments/assets/72998d06-7491-423f-82ab-83eaebf96a00" />
-<img width="877" height="588" alt="Screenshot 2026-10-20 210621" src="https://github.com/user-attachments/assets/edd794d7-8c98-4dbb-a4c0-dacd61c0cc6d" />
 
 <img width="1837" height="886" alt="Screenshot 2026-10-20 214449" src="https://github.com/user-attachments/assets/6558fcb3-2755-4632-afa7-def1cad4e4da" />
 <img width="1877" height="873" alt="Screenshot 2026-10-20 214707" src="https://github.com/user-attachments/assets/7152fa9e-30a8-445e-aca7-9ab3f220cf16" />
