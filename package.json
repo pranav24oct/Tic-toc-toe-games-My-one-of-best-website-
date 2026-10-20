@@ -1,11 +1,16 @@
 {
   "name": "tictoc-toy-games",
-  "version": "2.0.0",
-  "description": "TicToc Toy Games - creative browser gaming platform",
+  "version": "2.1.0",
+  "description": "TicToc Toy Games - responsive full-stack browser gaming platform",
   "main": "server.js",
+  "engines": {
+    "node": ">=22.11"
+  },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "node --watch --env-file-if-exists=.env server.js",
+    "check": "node --check server.js && node --check database.js && node --check public/js/app.js && node --check public/js/game-common.js",
+    "test:smoke": "node scripts/smoke-test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
