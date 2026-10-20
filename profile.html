@@ -262,8 +262,19 @@ Wins
 
 </div>
 
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;align-items:center;">
+    <label for="editPlayerName" style="color:var(--muted);">Display name</label>
+    <input id="editPlayerName" maxlength="40" minlength="2" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);" placeholder="Your display name">
+    <button class="secondary-button" type="button" onclick="saveProfileName()">Save profile</button>
+    <span id="profileMessage" role="status" style="color:var(--muted);"></span>
+</div>
 </section>
 
+<section class="section" style="width:100%;margin-top:45px;">
+    <span class="section-label">GAME HISTORY</span>
+    <h2 class="section-title">Recently <span class="gradient-text">played</span></h2>
+    <div id="gameHistory" class="games-grid" style="margin-top:25px;">Loading...</div>
+</section>
 
 <section
 class="section"
@@ -491,6 +502,9 @@ async function loadProfile() {
         percentage + "%";
 
 
+    const editName = document.getElementById("editPlayerName");
+    if (editName) editName.value = user.name;
+    loadGameHistory(data.history || []);
     loadGameStats(
         data.gameStats
     );
@@ -505,6 +519,30 @@ async function loadProfile() {
 
 }
 
+
+function loadGameHistory(items) {
+    const container = document.getElementById("gameHistory");
+    if (!container) return;
+    if (!items.length) { container.innerHTML = '<div class="game-card"><div class="game-card-content">No recorded games yet. Play a game while logged in to start your history.</div></div>'; return; }
+    container.innerHTML = items.map(item => {
+        const date = new Date(item.created_at + (String(item.created_at).endsWith('Z') ? '' : 'Z'));
+        return `<div class="game-card"><div class="game-card-content"><span class="game-type">${item.won ? '🏆 WIN' : '🎮 PLAYED'}</span><h3>${item.game}</h3><p>Score: <strong>${item.score}</strong></p><small style="color:var(--muted)">${Number.isNaN(date.getTime()) ? '' : date.toLocaleString()}</small></div></div>`;
+    }).join('');
+}
+
+async function saveProfileName() {
+    const input = document.getElementById('editPlayerName');
+    const message = document.getElementById('profileMessage');
+    const name = input.value.trim();
+    if (name.length < 2 || name.length > 40) { message.textContent = 'Name must be 2–40 characters.'; return; }
+    try {
+        const response = await fetch('/api/profile', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+        const data = await response.json();
+        if (!response.ok) { message.textContent = data.message || 'Could not save profile.'; return; }
+        document.getElementById('profileName').textContent = data.user.name;
+        message.textContent = 'Profile updated.';
+    } catch { message.textContent = 'Server unavailable. Try again.'; }
+}
 
 function loadGameStats(stats) {
 
